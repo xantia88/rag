@@ -10,6 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - ./scripts:/scripts
-  api:
-    container_name: rag-api
-    build: ./api
+  functions:
+    container_name: rag-functions
+    build: ./functions
