@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./scripts:/scripts
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
   functions:
     container_name: rag-functions
     build: ./functions
