@@ -13,3 +13,8 @@ services:
   functions:
     container_name: rag-functions
     build: ./functions
+  api:
+    container_name: rag-api
+    build: ./api
+    ports:
+      - "8000:8000"
