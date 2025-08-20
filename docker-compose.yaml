@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: rag-db
     image: pgvector/pgvector:pg17
     environment:
       POSTGRES_DB: kbase
@@ -10,4 +11,5 @@ services:
     volumes:
       - ./scripts:/scripts
   api:
+    container_name: rag-api
     build: ./api
