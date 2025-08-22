@@ -27,3 +27,10 @@ docker compose up
 
 docker exec -ti rag-models ollama pull nomic-embed-text
 
+6. Start
+
+docker compose up -d
+
+7. Stop
+
+docker compose down
