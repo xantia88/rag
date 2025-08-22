@@ -5,6 +5,9 @@ from langchain_core.documents import Document
 def get_embeddings():
     return OllamaEmbeddings(model="nomic-embed-text")
 
+
+
+
 connection = "postgresql+psycopg://admin:admin@db:5432/kbase" 
 collection_name = "items"
 
