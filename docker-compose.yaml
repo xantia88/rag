@@ -8,10 +8,10 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     ports:
-      - "5432:5432"
+      - "6432:5432"
     volumes:
       - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-      - pgdata:/var/lib/postgresql/data/pgdata
+      # - pgdata:/var/lib/postgresql/data/pgdata
     networks:
       - rag_net
     restart: unless-stopped
@@ -38,8 +38,16 @@ services:
     networks:
       - rag_net
     restart: unless-stopped
+  dev:
+    container_name: rag-dev
+    image: alpine:3
+    command: sh -c "apk add --no-cache iputils-ping curl && sleep infinity"
+    networks:
+      - rag_net
+    profiles:
+      - debug
 volumes:
-  pgdata:
+  # pgdata:
   models:
 networks:
   rag_net:

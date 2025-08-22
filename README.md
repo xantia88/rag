@@ -10,7 +10,7 @@ docker create rag_net
 
 3. Build containers
 
-docker compose --build --no-cache
+docker compose build --no-cache
 
 |Name|Description|Technology|
 |-|-|-|
@@ -18,19 +18,21 @@ docker compose --build --no-cache
 |rag-db|database with embeddings|pgvector|
 |rag-functions|various operations|python, bash|
 |rag-models|embeddings models|ollama|
+|rag-dev|debug containers within docker network|linux|
 
 4. Start containers
 
-docker compose up
+docker compose up -d
 
-5. Install nomic-embed-text model
+5. Install embeddings model
 
 docker exec -ti rag-models ollama pull nomic-embed-text
 
-6. Start
+7. Debug interaction between containers
 
-docker compose up -d
+docker compose --profile debug up
+docker exec -ti rag-dev sh
 
-7. Stop
+8. Stop
 
 docker compose down
