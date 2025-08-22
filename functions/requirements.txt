@@ -1,2 +1,4 @@
 langchain
 langchain-postgres
+langchain_ollama
+psycopg-binary

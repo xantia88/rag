@@ -1,3 +1,4 @@
+---
 services:
   db:
     container_name: rag-db
@@ -10,11 +11,36 @@ services:
       - "5432:5432"
     volumes:
       - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - pgdata:/var/lib/postgresql/data/pgdata
+    networks:
+      - rag_net
+    restart: unless-stopped
   functions:
     container_name: rag-functions
     build: ./functions
+    networks:
+      - rag_net
   api:
     container_name: rag-api
     build: ./api
     ports:
-      - "8000:8000"
+      - "8080:8000"
+    networks:
+      - rag_net
+    restart: unless-stopped
+  ollama:
+    container_name: rag-models
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - models:/root/.ollama
+    networks:
+      - rag_net
+    restart: unless-stopped
+volumes:
+  pgdata:
+  models:
+networks:
+  rag_net:
+    external: true
