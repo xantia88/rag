@@ -10,6 +10,13 @@ docker create rag_net
 
 docker compose --build --no-cache
 
+|Name|Description|Technology|
+|-|-|-|
+|rag-api|access points|python|
+|rag-db|database with embeddings|pgvector|
+|rag-functions|various operations|python, bash|
+|rag-models|embeddings models|ollama|
+
 4. Start containers
 
 docker compose up
