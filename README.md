@@ -1,3 +1,5 @@
+0. Ensure you have docker installed
+
 1. Clone this repo
 
 git clone ....

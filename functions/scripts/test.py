@@ -8,6 +8,7 @@ def get_embeddings():
 
 
 
+
 connection = "postgresql+psycopg://admin:admin@db:5432/kbase" 
 collection_name = "items"
 
