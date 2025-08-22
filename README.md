@@ -31,6 +31,7 @@ docker exec -ti rag-models ollama pull nomic-embed-text
 7. Debug interaction between containers
 
 docker compose --profile debug up
+
 docker exec -ti rag-dev sh
 
 8. Stop
