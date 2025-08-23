@@ -11,7 +11,7 @@ services:
       - "6432:5432"
     volumes:
       - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-      # - pgdata:/var/lib/postgresql/data/pgdata
+      - pgdata:/var/lib/postgresql/data
     networks:
       - rag_net
     restart: unless-stopped
@@ -47,7 +47,7 @@ services:
     profiles:
       - debug
 volumes:
-  # pgdata:
+  pgdata:
   models:
 networks:
   rag_net:
