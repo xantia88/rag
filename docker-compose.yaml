@@ -38,8 +38,8 @@ services:
     networks:
       - rag_net
     restart: unless-stopped
-  dev:
-    container_name: rag-dev
+  deb:
+    container_name: rag-debug
     image: alpine:3
     command: sh -c "apk add --no-cache iputils-ping curl && sleep infinity"
     networks:

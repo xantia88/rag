@@ -18,7 +18,7 @@ docker compose build --no-cache
 |rag-db|database with embeddings|pgvector|
 |rag-functions|various operations|python, bash|
 |rag-models|embeddings models|ollama|
-|rag-dev|debug containers within docker network|linux|
+|rag-debug|debug containers within docker network|linux|
 
 4. Start containers
 
@@ -37,3 +37,7 @@ docker exec -ti rag-dev sh
 8. Stop
 
 docker compose down
+
+9. Run specific function
+
+docker run -ti --network rag_net rag-functions /app/scripts/request.py
