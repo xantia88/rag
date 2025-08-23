@@ -36,8 +36,8 @@ docker exec -ti rag-dev sh
 
 8. Stop
 
-docker compose down
+docker compose down --remove-orphans
 
-9. Run specific function
+9. Run specific function (e.g. load data)
 
-docker run -ti --network rag_net rag-functions /app/scripts/request.py
+docker run --network=rag_net rag-functions python /app/scripts/load.py
