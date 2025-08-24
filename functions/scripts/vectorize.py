@@ -3,6 +3,7 @@ from langchain_core.documents import Document
 import os
 from pathlib import Path
 from ollama_embeddings import OllamaEmbeddings
+import psycopg
 
 def get_documents(path):
     documents = list()
@@ -36,6 +37,17 @@ if __name__=="__main__":
     db_port = os.getenv("DB_PORT", default="5432")
     db_name = os.getenv("DB_NAME", default="postgres")
     db_collection = os.getenv("DB_COLLECTION", default="items")
+
+    # clean database
+    # ------------------------
+    connection2 = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}" 
+    conn = psycopg.connect(connection2)
+    cur = conn.cursor()
+    cur.execute("delete from langchain_pg_collection where name=%s", (db_collection,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    # -----------------------
 
     connection = f"postgresql+psycopg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}" 
 
