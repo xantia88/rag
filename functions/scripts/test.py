@@ -9,4 +9,4 @@ if __name__=="__main__":
 
     client = ollama.Client(host=f"http://{host}:{port}")
     embeddings = client.embeddings(model='nomic-embed-text', prompt='this is test')
-    print(embeddings)
+    print(len(embeddings.embedding))

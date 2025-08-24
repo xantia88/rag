@@ -2,7 +2,7 @@
 
 1. Clone this repo
 
-git clone ....
+git clone https://github.com/xantia88/rag.git
 
 2. Create docker network
 
@@ -28,21 +28,20 @@ docker compose up -d
 
 docker exec -ti rag-models ollama pull nomic-embed-text
 
-7. Debug interaction between containers within the network
+7. Use special container to debug interaction between containers within the network
 
 docker compose --profile debug up
 
 docker exec -ti rag-debug sh
 
-8. Stop services and clean
+8. Stop services
 
 docker compose down --remove-orphans
 
-9. Run specific function (e.g. load data)
+9. Execute specific function via one-off container
 
 docker compose run functions python /app/scripts/vectorize.py
 docker compose run functions python /app/scripts/test.py
-docker compose run functions python /app/scripts/insert.py
 
 
 

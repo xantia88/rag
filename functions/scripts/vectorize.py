@@ -1,7 +1,7 @@
 from langchain_postgres import PGVector
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
-import requests
+import ollama
 import os
 
 class OllamaEmbeddings(Embeddings):
@@ -10,23 +10,17 @@ class OllamaEmbeddings(Embeddings):
         self.api_url = api_url
         self.model_name = model_name
 
+    def embed_query(self, text:str) -> list[float]:
+        client = ollama.Client(host=self.api_url)
+        response = client.embeddings(model=self.model_name, prompt=text)
+        return response.embedding
+
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         embeddings = list()
         for text in texts:
             embedding = self.embed_query(text)
             embeddings.append(embedding)
         return embeddings
-
-    def embed_query(self, text: str) -> list[float]:
-        url = f"{self.api_url}/api/embeddings"
-        body = {
-            "model": self.model_name,
-            "prompt": text
-        }
-        response = requests.post(url, json=body)
-        response.raise_for_status()
-        result = response.json()
-        return result.get("embedding")
 
 if __name__=="__main__":
     
