@@ -2,15 +2,21 @@
 
 1. Clone this repo
 
+```
 git clone https://github.com/xantia88/rag.git
+```
 
 2. Create docker network
 
+```
 docker create rag_net
+```
 
 3. Build containers
 
+```
 docker compose build --no-cache
+```
 
 |Name|Description|Technology|
 |-|-|-|
@@ -22,17 +28,22 @@ docker compose build --no-cache
 
 4. Start services
 
+```
 docker compose up -d
+```
 
 5. Install embeddings model into container where ollama is installed
 
+```
 docker exec -ti rag-models ollama pull nomic-embed-text
+```
 
 7. Use special container to debug interaction between containers within the network
 
+```
 docker compose --profile debug up
-
 docker exec -ti rag-debug sh
+```
 
 8. Stop services
 
