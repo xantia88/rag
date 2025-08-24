@@ -18,13 +18,13 @@ docker create rag_net
 docker compose build --no-cache
 ```
 
-|Name|Description|Technology|
+|Service name|Description|Technology|
 |-|-|-|
-|rag-api|access points|python|
-|rag-db|database with embeddings|pgvector|
-|rag-functions|various operations|python, bash|
-|rag-models|embeddings models|ollama|
-|rag-debug|debug containers within docker network|linux|
+|api|access points|python, fastapi|
+|db|data storage|postgres, vector|
+|functions|various operations|python, bash|
+|ollama|embeddings models|ollama|
+|deb|network debug|linux,iputils|
 
 4. Start services
 
@@ -38,7 +38,7 @@ docker compose up -d
 docker exec -ti rag-models ollama pull nomic-embed-text
 ```
 
-7. Use special container to debug interaction between containers within the network
+7. Use special container to debug network
 
 ```
 docker compose --profile debug up -d
