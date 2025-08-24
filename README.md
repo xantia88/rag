@@ -36,12 +36,15 @@ docker exec -ti rag-debug sh
 
 8. Stop services
 
+```
 docker compose down --remove-orphans
+```
 
 9. Execute specific function via one-off container
 
+```
 docker compose run functions python /app/scripts/vectorize.py
 docker compose run functions python /app/scripts/test.py
-
+```
 
 
