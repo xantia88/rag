@@ -1,7 +1,23 @@
 from langchain_postgres import PGVector
 from langchain_core.documents import Document
 import os
+from pathlib import Path
 from ollama_embeddings import OllamaEmbeddings
+
+def get_documents(path):
+    documents = list()
+    names = os.listdir(path)
+    for name in names:
+        file = os.path.join(path,name)
+        if os.path.isfile(file):
+            text = Path(file).read_text()
+            if text and len(text)>0:
+                document = Document(
+                    page_content=text,
+                    metadata={"id":len(documents), "source": file}
+                )
+                documents.append(document)
+    return documents
 
 if __name__=="__main__":
     
@@ -29,17 +45,9 @@ if __name__=="__main__":
         connection=connection,
         use_jsonb=True,
     )
-
-    docs = [
-        Document(
-            page_content="there are cats in the pond",
-            metadata={"id": 1, "location": "pond", "topic": "animals"},
-        ),
-        Document(
-            page_content="ducks are also found in the pond",
-            metadata={"id": 2, "location": "pond", "topic": "animals"},
-        )
-    ]
+    
+    docs = get_documents("data")
+    print(docs)
 
     ids = [doc.metadata["id"] for doc in docs]
     vector_store.add_documents(docs, ids = ids)

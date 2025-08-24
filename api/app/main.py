@@ -34,13 +34,12 @@ def read_root():
     )
     
     results = vector_store.similarity_search(
-        "kitty", k=10, filter={"id": {"$in": [1, 5, 2, 9]}}
+        "moscow", k=10, filter={"id": {"$in": [1, 5, 2, 9]}}
     )
 
     response = list()
     for doc in results:
         response.append(doc)
     return response
-    
-    #return {"message": "Hello from FastAPI"}
+
  

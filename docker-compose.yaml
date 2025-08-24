@@ -30,6 +30,8 @@ services:
       - DB_COLLECTION=items
     networks:
       - rag_net
+    volumes:
+      - ./data:/app/data
   api:
     container_name: rag-api
     build: ./api
