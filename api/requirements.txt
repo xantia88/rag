@@ -1,2 +1,6 @@
 fastapi
 uvicorn
+langchain
+langchain_postgres
+psycopg-binary
+ollama
