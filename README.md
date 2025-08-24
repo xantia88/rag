@@ -41,7 +41,7 @@ docker exec -ti rag-models ollama pull nomic-embed-text
 7. Use special container to debug interaction between containers within the network
 
 ```
-docker compose --profile debug up
+docker compose --profile debug up -d
 docker exec -ti rag-debug sh
 ```
 
