@@ -55,7 +55,7 @@ docker compose down --remove-orphans
 
 ```
 docker compose run --rm functions python /app/scripts/vectorize.py
-docker compose run --rm functions python /app/scripts/test.py
+docker compose run --rm functions python /app/scripts/delete.py
 ```
 
 

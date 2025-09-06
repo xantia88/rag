@@ -3,9 +3,9 @@ from langchain_core.documents import Document
 import os
 from pathlib import Path
 from ollama_embeddings import OllamaEmbeddings
-import psycopg
+import uuid
 
-def get_documents(path):
+def load_documents(path):
     documents = list()
     names = os.listdir(path)
     for name in names:
@@ -13,9 +13,10 @@ def get_documents(path):
         if os.path.isfile(file):
             text = Path(file).read_text()
             if text and len(text)>0:
+                chunk_id = str(uuid.uuid4())
                 document = Document(
                     page_content=text,
-                    metadata={"id":len(documents), "source": file}
+                    metadata={"id":chunk_id, "source": file}
                 )
                 documents.append(document)
     return documents
@@ -38,17 +39,6 @@ if __name__=="__main__":
     db_name = os.getenv("DB_NAME", default="postgres")
     db_collection = os.getenv("DB_COLLECTION", default="items")
 
-    # clean database
-    # ------------------------
-    connection2 = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}" 
-    conn = psycopg.connect(connection2)
-    cur = conn.cursor()
-    cur.execute("delete from langchain_pg_collection where name=%s", (db_collection,))
-    conn.commit()
-    cur.close()
-    conn.close()
-    # -----------------------
-
     connection = f"postgresql+psycopg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}" 
 
     vector_store = PGVector(
@@ -58,9 +48,9 @@ if __name__=="__main__":
         use_jsonb=True,
     )
     
-    docs = get_documents("data")
-    print(docs)
+    documents = load_documents("data")
+    print(documents)
 
-    ids = [doc.metadata["id"] for doc in docs]
-    vector_store.add_documents(docs, ids = ids)
-    print("document added", len(docs), ids)
+    ids = [document.metadata["id"] for document in documents]
+    vector_store.add_documents(documents, ids = ids)
+    print("document added", len(documents), ids)
