@@ -5,22 +5,37 @@ from pathlib import Path
 from ollama_embeddings import OllamaEmbeddings
 import uuid
 
-def load_documents(path):
-    documents = list()
+def list_files(path):
+    files = list()
     names = os.listdir(path)
     for name in names:
         file = os.path.join(path,name)
         if os.path.isfile(file):
-            text = Path(file).read_text()
-            if text and len(text)>0:
-                chunk_id = str(uuid.uuid4())
-                document = Document(
-                    page_content=text,
-                    metadata={"id":chunk_id, "source": file}
-                )
-                documents.append(document)
-    return documents
+            files.append(file)
+    return files
 
+
+def split_text(text):
+    chunks = list()
+    chunk_id = str(uuid.uuid4())
+    chunk = Document(
+        page_content=text,
+        metadata={
+            "id":chunk_id,
+            "source": file
+        }
+    )
+    chunks.append(chunk)
+    return chunks
+
+
+def get_chunks(file):
+    text = Path(file).read_text()
+    if text:
+        chunks = split_text(text)
+        return chunks
+
+    
 if __name__=="__main__":
     
     host = os.getenv("MODELS_HOST", default="localhost")
@@ -47,10 +62,16 @@ if __name__=="__main__":
         connection=connection,
         use_jsonb=True,
     )
-    
-    documents = load_documents("data")
-    print(documents)
 
-    ids = [document.metadata["id"] for document in documents]
-    vector_store.add_documents(documents, ids = ids)
-    print("document added", len(documents), ids)
+    files = list_files("data")
+    print("files",files)
+
+    for file in files:
+        print("process",file)
+        chunks = get_chunks(file)
+        print(len(chunks)," chunks made")
+        if len(chunks)>0:
+            ids = [chunk.metadata["id"] for chunk in chunks]
+            vector_store.add_documents(chunks, ids = ids)
+            print("chunks added", len(chunks), ids)
+            
