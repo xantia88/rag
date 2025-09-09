@@ -66,3 +66,9 @@ http://localhost:8080/items
 ```
 http://localhost:8080/add/items/document1.txt
 ```
+
+3. Delete collection
+
+```
+http://localhost:8080/delete/items
+```
