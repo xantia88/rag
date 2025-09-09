@@ -1,9 +1,12 @@
 import os
 from app.ollama_embeddings import OllamaEmbeddings
+from langchain_core.documents import Document
 from langchain_postgres import PGVector
+import uuid
+
 
 class Rag:
-
+    
     def __init__(self):
 
         host = os.getenv("MODELS_HOST", default="localhost")
@@ -31,23 +34,55 @@ class Rag:
             use_jsonb=True,
         )
 
-    def add(self, file):
-        print("add")
         
-
-    def find(self, str) -> list:
-
-        results = self.vector_store.similarity_search(
-            #str, k=10, filter={"id": {"$in": [1, 5, 2, 9]}}
-            str, k=10
-        )
+    def find(self, str):
 
         response = list()
-        for doc in results:
-            response.append(doc)
+
+        try:
+
+            results = self.vector_store.similarity_search(
+                #str, k=10, filter={"id": {"$in": [1, 5, 2, 9]}}
+                str, k=10
+            )
+
+            for doc in results:
+                response.append(doc)
+        except Exception as e:
+            print("exception",e)
+            response.append(e)
 
         return response
 
+    
+    def add(self, source, text):
+        print("add to rag",source)
+        chunks = self.split_text(text, source)
+        print(len(chunks)," chunks made")
+        if len(chunks)>0:
+            ids = [chunk.metadata["id"] for chunk in chunks]
+            self.vector_store.add_documents(chunks, ids = ids)
+            print("chunks added", len(chunks), ids)
+        return [{"x":123}]
+
+    
+    def delete_collection(self, name):
+        self.vector_store.delete_collection()
+        print("collection deleted",name)
+        return "ok"
+
+    
+    def split_text(self, text, source):
+        chunks = list()
+        chunk_id = str(uuid.uuid4())
+        chunk = Document(
+            page_content=text,
+            metadata={
+                "id":chunk_id,
+                "source": source
+            }
+        )
+        chunks.append(chunk)
+        return chunks
 
 
-        

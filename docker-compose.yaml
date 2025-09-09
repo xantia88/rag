@@ -15,19 +15,9 @@ services:
     networks:
       - rag_net
     restart: unless-stopped
-  functions:
-    container_name: rag-functions
-    build: ./functions
-    environment:
-      - MODELS_HOST=ollama
-      - MODELS_PORT=11434
-      - MODEL_NAME=nomic-embed-text
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=admin
-      - DB_PASSWORD=admin
-      - DB_NAME=kbase
-      - DB_COLLECTION=items
+  storage:
+    container_name: rag-storage
+    build: ./storage
     networks:
       - rag_net
     volumes:

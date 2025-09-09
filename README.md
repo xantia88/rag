@@ -20,9 +20,8 @@ docker compose build --no-cache
 
 |Service name|Description|Technology|
 |-|-|-|
-|api|access points|python, fastapi|
-|db|data storage|postgres, vector|
-|functions|various operations|python, bash|
+|api|service endpoints|python, fastapi|
+|db|data storage|postgres, pgvector|
 |ollama|embeddings models|ollama|
 |deb|network debug|linux,iputils|
 
@@ -51,11 +50,15 @@ docker exec -ti rag-debug sh
 docker compose down --remove-orphans
 ```
 
-9. Execute specific function via one-off container
+9. Similarity search in vector store
 
 ```
-docker compose run --rm functions python /app/scripts/vectorize.py
-docker compose run --rm functions python /app/scripts/delete.py
+http://localhost:8080/
 ```
 
+10. Add file to vector store. File will be downloaded via http stream from *storage/download* endpoint to emulate access to object storage.
+
+```
+http://localhost:8080/add/document1.txt
+```
 
