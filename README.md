@@ -1,4 +1,5 @@
-0. Ensure you have docker installed
+
+# Setup
 
 1. Clone this repo
 
@@ -50,15 +51,18 @@ docker exec -ti rag-debug sh
 docker compose down --remove-orphans
 ```
 
-9. Similarity search in vector store
+# Operations
+
+Assume *items* is a collection name.
+
+1. Perform similarity search in collection
 
 ```
-http://localhost:8080/
+http://localhost:8080/items
 ```
 
-10. Add file to vector store. File will be downloaded via http stream from *storage/download* endpoint to emulate access to object storage.
+2. Add file to vector store (file will be downloaded via http stream from *storage/download* endpoint to emulate access to object storage)
 
 ```
-http://localhost:8080/add/document1.txt
+http://localhost:8080/add/items/document1.txt
 ```
-
