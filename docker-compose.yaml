@@ -12,14 +12,10 @@ services:
     volumes:
       - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - rag_net
     restart: unless-stopped
   storage:
     container_name: rag-storage
     build: ./storage
-    networks:
-      - rag_net
     volumes:
       - ./data:/app/data
   api:
@@ -37,8 +33,6 @@ services:
       - DB_COLLECTION=items
     ports:
       - "8080:8000"
-    networks:
-      - rag_net
     restart: unless-stopped
   ollama:
     container_name: rag-models
@@ -47,20 +41,7 @@ services:
       - "11434:11434"
     volumes:
       - models:/root/.ollama
-    networks:
-      - rag_net
     restart: unless-stopped
-  deb:
-    container_name: rag-debug
-    image: alpine:3
-    command: sh -c "apk add --no-cache iputils-ping curl && sleep infinity"
-    networks:
-      - rag_net
-    profiles:
-      - debug
 volumes:
   pgdata:
   models:
-networks:
-  rag_net:
-    external: true

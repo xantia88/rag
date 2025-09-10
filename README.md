@@ -7,13 +7,7 @@
 git clone https://github.com/xantia88/rag.git
 ```
 
-2. Create docker network
-
-```
-docker create rag_net
-```
-
-3. Build containers
+2. Build containers
 
 ```
 docker compose build --no-cache
@@ -24,28 +18,28 @@ docker compose build --no-cache
 |api|service endpoints|python, fastapi|
 |db|data storage|postgres, pgvector|
 |ollama|embeddings models|ollama|
-|deb|network debug|linux,iputils|
+|storage|data storage|python, fastapi, local fs|
 
-4. Start services
+3. Start services
 
 ```
 docker compose up -d
 ```
 
-5. Install embeddings model into container where ollama is installed
+4. Install embeddings model into container where ollama is installed
 
 ```
 docker exec -ti rag-models ollama pull nomic-embed-text
 ```
 
-7. Use special container to debug network
+5. Use special container to debug network
 
 ```
 docker compose --profile debug up -d
 docker exec -ti rag-debug sh
 ```
 
-8. Stop services
+6. Stop services
 
 ```
 docker compose down --remove-orphans
@@ -55,7 +49,7 @@ docker compose down --remove-orphans
 
 Assume *items* is a collection name.
 
-1. Perform similarity search in collection
+1. Perform similarity search within the collection
 
 ```
 http://localhost:8080/items
