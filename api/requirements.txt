@@ -4,4 +4,4 @@ langchain
 langchain_postgres
 psycopg-binary
 ollama
-uuid
+

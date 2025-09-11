@@ -1,8 +1,8 @@
 import os
 from app.ollama_embeddings import OllamaEmbeddings
 from langchain_core.documents import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_postgres import PGVector
-import uuid
 
 
 class Rag:
@@ -75,16 +75,25 @@ class Rag:
 
         
     def _split_text(self, text, source):
-        chunks = list()
-        chunk_id = str(uuid.uuid4())
-        chunk = Document(
-            page_content=text,
-            metadata={
-                "id":chunk_id,
-                "source": source
-            }
+
+        documents = list()
+
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=100,
+            chunk_overlap=20
         )
-        chunks.append(chunk)
-        return chunks
+
+        chunks = text_splitter.split_text(text)
+        for i,chunk in enumerate(chunks):
+            document = Document(
+                page_content=chunk,
+                metadata={
+                    "id":i,
+                    "source":source
+                }
+            )
+            documents.append(document)
+        
+        return documents
 
 
