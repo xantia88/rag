@@ -3,7 +3,7 @@ from app.ollama_embeddings import OllamaEmbeddings
 from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_postgres import PGVector
-
+import uuid
 
 class Rag:
     
@@ -48,6 +48,7 @@ class Rag:
             )
             for doc,score in results:
                 document = {
+                    "id":doc.id,
                     "score": score,
                     "content": doc.page_content,
                     "metadata": doc.metadata
@@ -60,12 +61,12 @@ class Rag:
 
     
     def update(self, collection_name, source, text):
-        chunks = self._split_text(text, source)
+        normalized_text = self._normalize_text(text)
+        chunks = self._split_text(normalized_text, source)
         if len(chunks)>0:
-            ids = [chunk.metadata["id"] for chunk in chunks]
+            custom_ids = [str(uuid.uuid4()) for i in range(len(chunks))]
             vector_store = self._get_collection(collection_name)
-            vector_store.add_documents(chunks, ids = ids)
-            print("chunks added", len(chunks), ids)
+            vector_store.add_documents(chunks, ids = custom_ids)
         return len(chunks)
 
     
@@ -73,6 +74,10 @@ class Rag:
         vector_store = self._get_collection(collection_name)
         vector_store.delete_collection()
 
+
+    def _normalize_text(self, text):
+        normalized = " ".join(text.lower().strip().split())
+        return normalized
         
     def _split_text(self, text, source):
 
@@ -88,7 +93,7 @@ class Rag:
             document = Document(
                 page_content=chunk,
                 metadata={
-                    "id":i,
+                    "part": i,
                     "source":source
                 }
             )
