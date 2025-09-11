@@ -49,16 +49,16 @@ docker compose down --remove-orphans
 
 Assume *items* is a collection name.
 
-1. Perform similarity search within the collection
+1. Perform similarity search with score
 
 ```
-http://localhost:8080/items
+http://localhost:8080/retrieve/items
 ```
 
 2. Add file to vector store (file will be downloaded via http stream from *storage/download* endpoint to emulate access to object storage)
 
 ```
-http://localhost:8080/add/items/document1.txt
+http://localhost:8080/update/items/document1.txt
 ```
 
 3. Delete collection

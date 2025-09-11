@@ -28,7 +28,7 @@ class Rag:
         self.connection = f"postgresql+psycopg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}" 
 
 
-    def get_collection(self, collection_name):
+    def _get_collection(self, collection_name):
         vector_store = PGVector(
             embeddings=self.embeddings,
             collection_name=collection_name,
@@ -38,40 +38,43 @@ class Rag:
         return vector_store
     
         
-    def find(self, collection_name, str):
+    def retrieve(self, collection_name, str):
         response = list()
         try:
-            vector_store = self.get_collection(collection_name)
-            results = vector_store.similarity_search(
+            vector_store = self._get_collection(collection_name)
+            results = vector_store.similarity_search_with_score(
                 #str, k=10, filter={"id": {"$in": [1, 5, 2, 9]}}
                 str, k=10
             )
-            for doc in results:
-                response.append(doc)
+            for doc,score in results:
+                document = {
+                    "score": score,
+                    "content": doc.page_content,
+                    "metadata": doc.metadata
+                }
+                response.append(document)
         except Exception as e:
             print("exception",e)
             response.append(e)
         return response
 
     
-    def add(self, collection_name, source, text):
-        chunks = self.split_text(text, source)
+    def update(self, collection_name, source, text):
+        chunks = self._split_text(text, source)
         if len(chunks)>0:
             ids = [chunk.metadata["id"] for chunk in chunks]
-            vector_store = self.get_collection(collection_name)
+            vector_store = self._get_collection(collection_name)
             vector_store.add_documents(chunks, ids = ids)
             print("chunks added", len(chunks), ids)
-        return [{"x":123}]
+        return len(chunks)
 
     
     def delete_collection(self, collection_name):
-        vector_store = self.get_collection(collection_name)
+        vector_store = self._get_collection(collection_name)
         vector_store.delete_collection()
-        print("collection deleted", collection_name)
-        return "ok"
 
-    
-    def split_text(self, text, source):
+        
+    def _split_text(self, text, source):
         chunks = list()
         chunk_id = str(uuid.uuid4())
         chunk = Document(
