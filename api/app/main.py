@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from app.rag import Rag
+from app.query import Query
 import requests
 
 app = FastAPI()
 rag = Rag()
 
-@app.get("/retrieve/{name}")
-def retrieve(name):
-    response = rag.retrieve(name, "rain london")
+@app.post("/retrieve/{name}")
+def retrieve(name, query: Query):
+    response = rag.retrieve(name, query)
     return response
 
 

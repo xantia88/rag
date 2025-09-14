@@ -1,9 +1,11 @@
 import os
 from app.ollama_embeddings import OllamaEmbeddings
+from app.query import Query
 from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_postgres import PGVector
 import uuid
+
 
 class Rag:
     
@@ -38,13 +40,13 @@ class Rag:
         return vector_store
     
         
-    def retrieve(self, collection_name, str):
+    def retrieve(self, collection_name: str, query: Query):
         response = list()
         try:
             vector_store = self._get_collection(collection_name)
             results = vector_store.similarity_search_with_score(
                 #str, k=10, filter={"id": {"$in": [1, 5, 2, 9]}}
-                str, k=10
+                query.text, query.k
             )
             for doc,score in results:
                 document = {
