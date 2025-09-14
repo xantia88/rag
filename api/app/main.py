@@ -8,7 +8,7 @@ rag = Rag()
 
 @app.post("/retrieve/{name}")
 def retrieve(name, query: Query):
-    response = rag.retrieve(name, query)
+    response = rag.request(name, query)
     return response
 
 

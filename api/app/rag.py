@@ -38,9 +38,23 @@ class Rag:
             use_jsonb=True,
         )
         return vector_store
+
     
+    def request(self, collection_name:str, query:Query):
+        documents = self._retrieve(collection_name, query)
+        response = self._generate(documents)
+        return response
+
+    
+    def _generate(self, documents):
+        content = list("Response will be here")
+        for document in documents:
+            content.append(document.get("content"))
+        response = " ".join(content)
+        return response
         
-    def retrieve(self, collection_name: str, query: Query):
+        
+    def _retrieve(self, collection_name: str, query: Query):
         response = list()
         try:
             vector_store = self._get_collection(collection_name)
