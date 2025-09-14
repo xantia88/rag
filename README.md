@@ -49,15 +49,14 @@ docker compose down --remove-orphans
 
 Assume *items* is a collection name.
 
-1. Perform similarity search with score
+1. Retreieve data
 
 ```
-curl -X POST \
+curl http://localhost:8080/retrieve/items \
+-X POST \
 -H 'Content-type: application/json' \
--d '{"text":"your question here", "k":10}'
+-d '{"text":"your question here"}'
 ```
-
-*k is optional, 10 by default*
 
 2. Add file to vector store (file will be downloaded via http stream from *storage/download* endpoint to emulate access to object storage)
 
