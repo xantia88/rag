@@ -1,5 +1,5 @@
 import os
-from app.ollama_embeddings import OllamaEmbeddings
+from app.ollama_adapter import OllamaEmbeddings, OllamaGenerator
 from app.query import Query
 from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -14,12 +14,18 @@ class Rag:
 
         host = os.getenv("MODELS_HOST", default="localhost")
         port = os.getenv("MODELS_PORT", default="11434")
-        model = os.getenv("MODEL_NAME", default="nomic-embed-text")
+        emb_model = os.getenv("EMB_MODEL_NAME", default="nomic-embed-text")
+        gen_model = os.getenv("GEN_MODEL_NAME", default="qwen3:0.6b")
 
         self.embeddings = OllamaEmbeddings(
             api_url=f"http://{host}:{port}",
-            model_name=model
+            model_name=emb_model,
         )
+
+        self.generator = OllamaGenerator(
+            api_url=f"http://{host}:{port}",
+            model_name=gen_model
+        )        
 
         db_user = os.getenv("DB_USER", default="admin")
         db_password = os.getenv("DB_PASSWORD", default="admin")
@@ -42,18 +48,35 @@ class Rag:
     
     def request(self, collection_name:str, query:Query):
         documents = self._retrieve(collection_name, query)
-        response = self._generate(documents)
+        response = self._generate(documents, query)
         return response
 
     
-    def _generate(self, documents):
-        content = list("Response will be here")
+    def _generate(self, documents:list, query:Query):
+        print(documents)
+        content = list()
         for document in documents:
             content.append(document.get("content"))
-        response = " ".join(content)
+        context = "\n\n".join(content)
+
+        prompt = f"""
+
+        /no_think
+        
+        Используй следующий контекст:
+
+        {context}
+
+        Ответь на вопрос:
+
+        {query.text}
+
+        """
+        
+        response = self.generator.generate(prompt)
         return response
         
-        
+
     def _retrieve(self, collection_name: str, query: Query):
         response = list()
         try:

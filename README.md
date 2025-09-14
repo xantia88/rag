@@ -26,10 +26,11 @@ docker compose build --no-cache
 docker compose up -d
 ```
 
-4. Install embeddings model into container where ollama is installed
+4. Install embeddings and generation models 
 
 ```
 docker exec -ti rag-models ollama pull nomic-embed-text
+docker exec -ti rag-models ollama pull qwen3:0.6b
 ```
 
 5. Use special container to debug network

@@ -24,7 +24,8 @@ services:
     environment:
       - MODELS_HOST=ollama
       - MODELS_PORT=11434
-      - MODEL_NAME=nomic-embed-text
+      - EMB_MODEL_NAME=nomic-embed-text
+      - GEN_MODEL_NAME=qwen3:0.6b
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=admin
