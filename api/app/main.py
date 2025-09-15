@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.rag import Rag
 from app.query import Query
+from app.source import Source
 import requests
 
 app = FastAPI()
@@ -12,13 +13,13 @@ def retrieve(name, query: Query):
     return response
 
 
-@app.get("/update/{name}/{filename}")
-def update(name, filename):
-    url = f"http://storage:8000/file/{filename}"
+@app.post("/update/{name}")
+def update(name, source: Source):
+    url = f"http://storage:8000/file/{source.path}"
     response = requests.get(url, stream=True)
     if response.status_code == 200:
         text = response.text
-        rag.update(name, filename, text)
+        rag.update(name, source.path, text)
         return text
     else:
         return f"Failed to download the file. Status code: {response.status_code}"

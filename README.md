@@ -33,14 +33,7 @@ docker exec -ti rag-models ollama pull nomic-embed-text
 docker exec -ti rag-models ollama pull qwen3:0.6b
 ```
 
-5. Use special container to debug network
-
-```
-docker compose --profile debug up -d
-docker exec -ti rag-debug sh
-```
-
-6. Stop services
+5. Stop services
 
 ```
 docker compose down --remove-orphans
@@ -62,7 +55,10 @@ curl http://localhost:8080/retrieve/items \
 2. Add file to vector store (file will be downloaded via http stream from *storage/download* endpoint to emulate access to object storage)
 
 ```
-http://localhost:8080/update/items/document1.txt
+curl http://localhost:8080/update/items \
+-X POST \
+-H 'Content-type: application/json' \
+-d '{"path":"path/to/document1.txt"}'
 ```
 
 3. Delete collection

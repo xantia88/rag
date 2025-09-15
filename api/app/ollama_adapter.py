@@ -1,6 +1,7 @@
 from langchain_core.embeddings import Embeddings
 from ollama import Client
 
+
 class OllamaEmbeddings(Embeddings):
 
     

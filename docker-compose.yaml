@@ -41,8 +41,7 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - models:/root/.ollama
+      - ./ollama_models:/root/.ollama
     restart: unless-stopped
 volumes:
   pgdata:
-  models:
