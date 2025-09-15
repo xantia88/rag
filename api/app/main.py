@@ -25,7 +25,7 @@ def update(name, source: Source):
         return f"Failed to download the file. Status code: {response.status_code}"
 
     
-@app.get("/delete/{name}")
+@app.delete("/delete/{name}")
 def delete(name):
     rag.delete_collection(name)
     return f"collection {name} deleted"

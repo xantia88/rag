@@ -30,7 +30,7 @@ docker compose up -d
 
 ```
 docker exec -ti rag-models ollama pull nomic-embed-text
-docker exec -ti rag-models ollama pull qwen3:0.6b
+docker exec -ti rag-models ollama pull qwen3:4b
 ```
 
 5. Stop services
@@ -64,5 +64,5 @@ curl http://localhost:8080/update/items \
 3. Delete collection
 
 ```
-http://localhost:8080/delete/items
+curl http://localhost:8080/delete/items -X DELETE
 ```

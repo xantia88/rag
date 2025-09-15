@@ -45,10 +45,15 @@ class Rag:
         )
         return vector_store
 
+
+    def _nothink(self, response):
+        parts = response.split("</think>")
+        return parts[1]
     
     def request(self, collection_name:str, query:Query):
         documents = self._retrieve(collection_name, query)
         response = self._generate(documents, query)
+        response = self._nothink(response)
         return response
 
     
@@ -61,8 +66,6 @@ class Rag:
 
         prompt = f"""
 
-        /no_think
-        
         Используй следующий контекст:
 
         {context}
