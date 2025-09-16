@@ -50,14 +50,15 @@ class Rag:
         parts = response.split("</think>")
         return parts[1]
     
-    def request(self, collection_name:str, query:Query):
-        documents = self._retrieve(collection_name, query)
-        response = self._generate(documents, query)
+        
+    def generate(self, collection_name:str, query:Query):
+        documents = self.retrieve(collection_name, query)
+        response = self._request(documents, query)
         response = self._nothink(response)
         return response
 
     
-    def _generate(self, documents:list, query:Query):
+    def _request(self, documents:list, query:Query):
         print(documents)
         content = list()
         for document in documents:
@@ -80,7 +81,7 @@ class Rag:
         return response
         
 
-    def _retrieve(self, collection_name: str, query: Query):
+    def retrieve(self, collection_name: str, query: Query):
         response = list()
         try:
             vector_store = self._get_collection(collection_name)
@@ -136,9 +137,10 @@ class Rag:
                 page_content=chunk,
                 metadata={
                     "part": i,
-                    "source":source
                 }
             )
+            document.metadata["source"] = source.path
+            document.metadata.update(source.metadata)
             documents.append(document)
         
         return documents
